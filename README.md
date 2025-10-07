@@ -1,4 +1,3 @@
-# wheel-of-fortune-react
 # Wheel of Fortune (React)
 
 Fast, local 3-player Wheel of Fortune game.
