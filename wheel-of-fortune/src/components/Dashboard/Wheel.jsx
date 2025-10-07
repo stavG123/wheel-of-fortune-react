@@ -282,14 +282,17 @@ export default function WheelOfFortune() {
       <button
         onClick={spinWheel}
         disabled={isSpinning}
-        className="mt-8 px-8 py-4 bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-500 disabled:cursor-not-allowed text-black font-bold text-xl rounded-full shadow-lg transform hover:scale-105 transition-all duration-200" 
+        className="mt-8 px-8 py-4 bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-500 
+        disabled:cursor-not-allowed text-black font-bold text-xl rounded-full shadow-lg 
+        transform hover:scale-105 transition-all duration-200" 
+        style={{marginBottom: '0px'}}
       >
         {isSpinning ? "Spinning..." : "Spin the Wheel!" }
       </button>
 
-      {result !== null && (
-  <div className="mt-6 p-6 bg-white rounded-lg shadow-xl">
-    <p className="font-bold text-gray-800" style={{fontSize: '40px', marginBottom: '0px',color: '#FFFFFF'}}>
+        {result !== null && (
+  <div className="mt-1 p-6 bg-white rounded-lg shadow-xl">
+     <p className="font-bold text-gray-800" style={{fontSize: '20px', margin: '0px',color: '#FFFFFF'}}>
       Result:
     </p>
     <div className="bg-gray-900 p-5 rounded-lg">
@@ -297,7 +300,7 @@ export default function WheelOfFortune() {
         className="block font-black" 
         style={{
           color: '#FFFFFF',
-          fontSize: '40px',
+          fontSize: '20px',
           textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
           lineHeight: '1'
         }}
