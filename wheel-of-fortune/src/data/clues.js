@@ -1,3 +1,11 @@
+// Wheel values for the Wheel of Fortune game
+export const WHEEL_VALUES = [
+  500, 550, 600, 650, 700, 800, 900,
+  500, 600, 700, 800, 900, 500, 650,
+  700, 800, 900, 500, 600, 700,
+  "Bankrupt", "Lose a Turn", "Free Play", "Top Value: $2500"
+]; // 24 slots
+
 // Clue data for Wheel of Fortune game
 export const clues = [
   // Movies
