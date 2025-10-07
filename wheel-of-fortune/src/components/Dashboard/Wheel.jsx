@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 
 const WHEEL_VALUES = [
   500, 550, 600, 650, 700, 800, 900,
@@ -11,37 +11,111 @@ export default function WheelOfFortune() {
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [result, setResult] = useState(null);
+  
+  // Physics variables
+  const segments = WHEEL_VALUES;
+  const maxSpeed = Math.PI / (segments.length * 0.1); // Maximum rotation speed (much faster - ~10x)
+  const upTime = segments.length * 20; // Acceleration phase duration (ms) - very fast acceleration
+  const downTime = segments.length * 200; // Deceleration phase duration (ms) - much shorter deceleration
+  const timerDelay = Math.max(5, segments.length * 0.2); // ms between frames - very fast frame rate
+  
+  // Animation state
+  const animationRef = useRef({
+    angleDelta: 0,
+    angleCurrent: 0,
+    frames: 0,
+    startTime: 0,
+    winningSegment: null
+  });
 
-  const spinWheel = () => {
+  const spinWheel = useCallback(() => {
     if (isSpinning) return;
     
     setIsSpinning(true);
     setResult(null);
     
-    // Random spins between 5-10 full rotations plus random position
-    const spins = 5 + Math.random() * 5;
-    const randomDegree = Math.random() * 360;
-    const totalRotation = rotation + (spins * 360) + randomDegree;
+    // Initialize animation state
+    const currentRotation = rotation;
+    animationRef.current = {
+      angleDelta: 0,
+      angleCurrent: currentRotation,
+      frames: 0,
+      startTime: Date.now(),
+      winningSegment: null // Set to specific segment index to force win, or null for random
+    };
     
-    setRotation(totalRotation);
+    onTimerTick();
+  }, [isSpinning, rotation]);
+
+  const onTimerTick = useCallback(() => {
+    const anim = animationRef.current;
+    const currentTime = Date.now();
+    const elapsed = currentTime - anim.startTime;
     
-    // Calculate which segment we landed on
-    setTimeout(() => {
-      const normalizedRotation = totalRotation % 360;
-      const segmentAngle = 360 / WHEEL_VALUES.length;
-      const segmentIndex = Math.floor((360 - normalizedRotation + segmentAngle / 2) / segmentAngle) % WHEEL_VALUES.length;
+    anim.frames++;
+    
+    // Determine which phase we're in
+    if (elapsed < upTime) {
+      // Acceleration phase
+      const progress = elapsed / upTime;
+      const easeProgress = Math.sin((progress * Math.PI) / 2);
+      anim.angleDelta = maxSpeed * easeProgress;
       
-      setResult(WHEEL_VALUES[segmentIndex]);
-      setIsSpinning(false);
-    }, 4000);
-  };
+      // Add some randomness to maxSpeed (optional)
+      // anim.angleDelta *= (0.8 + Math.random() * 0.4);
+    } else if (elapsed < upTime + downTime) {
+      // Deceleration phase
+      const progress = (elapsed - upTime) / downTime;
+      const easeProgress = Math.sin((progress * Math.PI) / 2 + Math.PI / 2);
+      anim.angleDelta = maxSpeed * easeProgress;
+      
+      // Check winning condition
+      const currentSegment = Math.floor((360 - (anim.angleCurrent % 360) + (360 / segments.length) / 2) / (360 / segments.length)) % segments.length;
+      
+      if (anim.winningSegment !== null && currentSegment === anim.winningSegment && anim.frames > segments.length) {
+        // Stop at winning segment
+        anim.angleDelta = 0;
+        finishSpin();
+        return;
+      }
+    } else {
+      // Animation complete
+      anim.angleDelta = 0;
+      finishSpin();
+      return;
+    }
+    
+    // Update rotation
+    anim.angleCurrent += anim.angleDelta;
+    setRotation(anim.angleCurrent);
+    
+    // Continue animation
+    setTimeout(onTimerTick, timerDelay);
+  }, [maxSpeed, upTime, downTime, segments.length, timerDelay]);
+
+  const finishSpin = useCallback(() => {
+    const anim = animationRef.current;
+    
+    // Calculate final result
+    const normalizedRotation = anim.angleCurrent % 360;
+    const segmentAngle = 360 / segments.length;
+    const segmentIndex = Math.floor((360 - normalizedRotation + segmentAngle / 2) / segmentAngle) % segments.length;
+    
+    setResult(segments[segmentIndex]);
+    setIsSpinning(false);
+  }, [segments]);
 
   const segmentAngle = 360 / WHEEL_VALUES.length;
+  
+  // Calculate which segment is currently under the pointer
+  const getCurrentSegment = (currentRotation) => {
+    const normalizedRotation = currentRotation % 360;
+    return Math.floor((360 - normalizedRotation + segmentAngle / 2) / segmentAngle) % WHEEL_VALUES.length;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900 flex flex-col items-center justify-center p-8">
       <h1 className="text-5xl font-bold text-yellow-300 mb-8 drop-shadow-lg">
-        Wheel of Fortune
       </h1>
       
       <div className="relative">
@@ -50,12 +124,18 @@ export default function WheelOfFortune() {
           <div className="w-0 h-0 border-l-[20px] border-r-[20px] border-t-[40px] border-l-transparent border-r-transparent border-t-red-500 drop-shadow-lg"></div>
         </div>
         
+        {/* Red Arrow Indicator - Shows where wheel will stop */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-8 z-30">
+          <div className="w-0 h-0 border-l-[8px] border-r-[8px] border-t-[16px] border-l-transparent border-r-transparent border-t-red-600 drop-shadow-lg"></div>
+          <div className="text-red-600 text-xs font-bold text-center mt-1">STOP</div>
+        </div>
+        
         {/* Wheel Container */}
         <div className="relative w-[500px] h-[500px]">
           {/* Wheel */}
           <svg
             viewBox="0 0 400 400"
-            className="w-full h-full transition-transform duration-[4000ms] ease-out"
+            className="w-full h-full"
             style={{ transform: `rotate(${rotation}deg)` }}
           >
             {/* Outer circle border */}
@@ -71,11 +151,22 @@ export default function WheelOfFortune() {
               const x2 = 200 + 190 * Math.cos(nextAngle);
               const y2 = 200 + 190 * Math.sin(nextAngle);
               
-              // Alternate colors
+              // Check if this is the current segment under the pointer
+              const currentSegment = getCurrentSegment(rotation);
+              const isCurrentSegment = index === currentSegment;
+              
+              // Alternate colors with highlight for current segment
               const colors = ['#fbbf24', '#f59e0b', '#ef4444', '#dc2626', '#10b981', '#059669'];
-              const fill = typeof value === 'string' 
+              let fill = typeof value === 'string' 
                 ? (value === 'Bankrupt' ? '#1f2937' : '#3b82f6')
                 : colors[index % colors.length];
+              
+              // Highlight current segment with brighter color
+              if (isCurrentSegment) {
+                fill = typeof value === 'string' 
+                  ? (value === 'Bankrupt' ? '#374151' : '#60a5fa')
+                  : '#fcd34d'; // Bright yellow for current segment
+              }
               
               // Text position
               const textAngle = (index * segmentAngle + segmentAngle / 2 - 90) * (Math.PI / 180);
@@ -89,20 +180,22 @@ export default function WheelOfFortune() {
                   <path
                     d={`M 200 200 L ${x1} ${y1} A 190 190 0 0 1 ${x2} ${y2} Z`}
                     fill={fill}
-                    stroke="#fff"
-                    strokeWidth="2"
+                    stroke={isCurrentSegment ? "#ff0000" : "#fff"}
+                    strokeWidth={isCurrentSegment ? "4" : "2"}
+                    filter={isCurrentSegment ? "drop-shadow(0 0 8px #ff0000)" : "none"}
                   />
                   
                   {/* Text */}
                   <text
                     x={textX}
                     y={textY}
-                    fill="white"
+                    fill={isCurrentSegment ? "#ff0000" : "white"}
                     fontSize={typeof value === 'string' ? '7' : '11'}
                     fontWeight="bold"
                     textAnchor="middle"
                     dominantBaseline="middle"
                     transform={`rotate(${textRotation}, ${textX}, ${textY})`}
+                    filter={isCurrentSegment ? "drop-shadow(0 0 4px #ff0000)" : "none"}
                   >
                     {typeof value === 'number' ? `${value}` : value}
                   </text>
