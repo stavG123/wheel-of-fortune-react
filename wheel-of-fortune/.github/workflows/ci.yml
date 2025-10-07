@@ -1,0 +1,45 @@
+name: build
+
+on:
+  push:
+    branches: ["**"]   # run on any branch (incl. stav-first-task)
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Run from the repo root
+    defaults:
+      run:
+        working-directory: .
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Debug working dir
+        run: |
+          pwd
+          ls -la
+          test -f package.json && echo "package.json found" || (echo "NO package.json" && exit 1)
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
