@@ -1,0 +1,73 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard__main {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+.dashboard__board {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at top, #0a3d6d 0%, #04223c 60%, #03182b 100%);
+}
+
+.dashboard__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel {
+  background: #0f172a;
+  border: 1px solid #1f2a44;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.panel h2 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+}
+
+.button {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border: 1px solid #224f92;
+  background: linear-gradient(180deg, #1f6feb 0%, #1b57b3 100%);
+  color: white;
+  border-radius: 8px;
+}
+
+.button--secondary {
+  background: #0b1220;
+  border-color: #2b3754;
+}
+
+.bank__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-top: 1px solid #22304d;
+}
+
+.bank__row:first-of-type {
+  border-top: none;
+}
+
+
