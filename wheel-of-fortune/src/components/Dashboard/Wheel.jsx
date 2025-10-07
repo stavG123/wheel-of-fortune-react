@@ -4,7 +4,7 @@ const WHEEL_VALUES = [
   500, 550, 600, 650, 700, 800, 900,
   500, 600, 700, 800, 900, 500, 650,
   700, 800, 900, 500, 600, 700,
-  "Bankrupt", "Lose a Turn", "Free Play", "Top Value: $2500"
+  "Bankrupt", "Lose a Turn", "Free Play", "2500"
 ];
 
 export default function WheelOfFortune() {

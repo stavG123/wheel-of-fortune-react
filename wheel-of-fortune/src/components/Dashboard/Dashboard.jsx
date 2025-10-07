@@ -47,7 +47,6 @@ function Dashboard() {
         <aside className="dashboard__sidebar">
           <div className="panel">
             <h2>Controls</h2>
-            <button className="button">Spin</button>
             <button className="button">Buy Vowel</button>
             <button className="button button--secondary">Solve</button>
             <button className="button" onClick={startNewRound}>New Round</button>
