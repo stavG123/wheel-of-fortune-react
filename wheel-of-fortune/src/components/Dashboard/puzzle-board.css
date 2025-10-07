@@ -1,4 +1,9 @@
 .puzzle-board {
+  /* Tile sizing variables (scoped to board) */
+  --tile-w: 4rem;     /* ≈30% larger width baseline */
+  --tile-h: 3.5rem;   /* ≈30% larger height baseline */
+  --tile-gap: 1rem;   /* gap-4 equivalent */
+
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -13,12 +18,16 @@
 
 .puzzle-row {
   display: grid;
-  grid-template-columns: repeat(14, 1fr);
-  gap: 24px;
+  /* Keep 14 columns, but ensure each column won't shrink below desired tile width */
+  grid-template-columns: repeat(14, minmax(var(--tile-w), 1fr));
+  gap: var(--tile-gap);
 }
 
 .tile {
-  aspect-ratio: 3.2; /* wider pill-like shape */
+  /* Explicit tile sizing using variables; width follows column width */
+  width: 100%;
+  height: var(--tile-h);
+
   display: flex;
   align-items: center;
   justify-content: center;
