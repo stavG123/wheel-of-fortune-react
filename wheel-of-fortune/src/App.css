@@ -1,6 +1,6 @@
 /* App-level layout reset; component styles live alongside components */
 #root {
-  max-width: 1400px;
+  max-width: 3000px;
   margin: 0 auto;
   padding: 24px;
 }
