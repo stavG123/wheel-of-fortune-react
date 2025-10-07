@@ -1,46 +1,43 @@
-# .github/workflows/ci.yml
 name: build
 
 on:
   push:
-    branches: [ "**" ]
+    branches: ["**"]
   pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    # Force all steps to run at the repo root
-    defaults:
-      run:
-        working-directory: .
-
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: package-lock.json  # lockfile at root
+          cache-dependency-path: wheel-of-fortune/package-lock.json
 
-      # Debug step so you can see where CI is running
-      - name: Show working dir
+      - name: Move into app folder
+        working-directory: wheel-of-fortune
         run: |
+          echo "📁 Current dir:"
           pwd
+          echo "📄 Files here:"
           ls -la
-          test -f package.json && echo "package.json found" || (echo "NO package.json" && exit 1)
 
       - name: Install dependencies
+        working-directory: wheel-of-fortune
         run: npm ci
 
-      - name: Build
+      - name: Build the project
+        working-directory: wheel-of-fortune
         run: npm run build
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: dist
+          path: wheel-of-fortune/dist
