@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import PuzzleBoard from './PuzzleBoard.jsx'
 import './dashboard.css'
 import { getRandomClue } from '../../data/clues.js'
+import Wheel from './Wheel.jsx'
 
 function Dashboard() {
   const [round, setRound] = useState(1)
@@ -66,6 +67,11 @@ function Dashboard() {
               <span>Round #</span>
               <strong>{round}</strong>
             </div>
+          </div>
+
+          <div className="panel">
+            <h2>Wheel</h2>
+            <Wheel onStop={(seg) => console.log('Landed on', seg)} />
           </div>
         </aside>
       </main>
