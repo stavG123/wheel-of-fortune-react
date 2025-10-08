@@ -1,39 +1,43 @@
-name: Deploy Vite to GitHub Pages
+name: build
+
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
+    branches: ["**"]
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
-      - run: npm run build
-      - run: touch dist/.nojekyll
-      - uses: actions/upload-pages-artifact@v3
+          cache-dependency-path: wheel-of-fortune/package-lock.json
+
+      - name: Move into app folder
+        working-directory: wheel-of-fortune
+        run: |
+          echo "📁 Current dir:"
+          pwd
+          echo "📄 Files here:"
+          ls -la
+
+      - name: Install dependencies
+        working-directory: wheel-of-fortune
+        run: npm ci
+
+      - name: Build the project
+        working-directory: wheel-of-fortune
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
-          path: dist
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          name: dist
+          path: wheel-of-fortune/dist
