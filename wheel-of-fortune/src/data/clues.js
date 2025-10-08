@@ -14,6 +14,8 @@ export const clues = [
   { category: "MOVIES", phrase: "THE LION KING" },
   { category: "MOVIES", phrase: "TITANIC" },
   { category: "MOVIES", phrase: "AVENGERS ENDGAME" },
+  { category: "MOVIES", phrase: "SINNERS" },
+
   
   // Food & Drink
   { category: "FOOD & DRINK", phrase: "HOT DOG" },
