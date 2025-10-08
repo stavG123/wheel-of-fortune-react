@@ -10,4 +10,5 @@ export default defineConfig({
       },
     }),
   ],
+  base: '/wheel-of-fortune-react/', // 👈 IMPORTANT for GitHub Pages
 })
