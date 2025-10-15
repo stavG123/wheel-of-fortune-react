@@ -37,6 +37,7 @@ export const clues = [
   { category: "ANIMALS", phrase: "PENGUIN" },
   { category: "ANIMALS", phrase: "BUTTERFLY" },
   { category: "ANIMALS", phrase: "KANGAROO" },
+  { category: "ANIMALS", phrase: "KIWI"},
   
   // Phrases
   { category: "PHRASES", phrase: "THINK OUTSIDE THE BOX" },
