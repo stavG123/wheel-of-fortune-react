@@ -1,30 +1,30 @@
 import React, { useState, useRef, useCallback } from "react";
 
 const WHEEL_VALUES = [
-  500,
-  550,
-  600,
-  650,
-  700,
-  800,
-  900,
-  500,
-  600,
-  700,
-  800,
-  900,
-  500,
-  650,
-  700,
-  800,
-  900,
-  500,
-  600,
-  700,
-  "Bankrupt",
   "Lose a Turn",
-  "Free Play",
+  800,
+  500,
+  650,
+  500,
+  900,
+  "Bankrupt",
+  600,
+  500,
+  600,
+  700,
+  600,
+  650,
+  500,
+  700,
+  500,
+  600,
+  550,
+  500,
+  600,
+  "Bankrupt",
+  650,
   "2500",
+  750
 ];
 
 export default function WheelOfFortune() {
@@ -55,10 +55,11 @@ export default function WheelOfFortune() {
     setResult(null);
 
     // Initialize animation state
-    const currentRotation = rotation;
+    const randomSpin = Math.random() * 360; // random start offset
+
     animationRef.current = {
       angleDelta: 0,
-      angleCurrent: currentRotation,
+      angleCurrent: rotation + randomSpin,
       frames: 0,
       startTime: Date.now(),
       winningSegment: null, // Set to specific segment index to force win, or null for random
