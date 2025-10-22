@@ -127,7 +127,7 @@ function Dashboard() {
         <header className="dashboard__header">
           <h1>Wheel of Fortune</h1>
         </header>
-        <div style={{ textAlign: 'center', marginTop: 12, color: '#e2e8f0' }}>
+        <div style={{ textAlign: 'center', marginTop: 12, color: '#1b66c8ff' }}>
           Loading puzzle…
         </div>
       </div>
@@ -140,7 +140,7 @@ function Dashboard() {
         <h1>Wheel of Fortune</h1>
       </header>
 
-      <div style={{ textAlign: 'center', marginTop: '-8px', color: '#e2e8f0' }}>
+      <div style={{ textAlign: 'center', marginTop: '-8px', color: '#3267acff' }}>
         <h2 style={{ margin: 0 }}>{clue.category}</h2>
         <div style={{ opacity: 0.75, fontSize: 14 }}>{status}</div>
       </div>
