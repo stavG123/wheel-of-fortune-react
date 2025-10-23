@@ -6,8 +6,13 @@ Fast, local 3-player Wheel of Fortune game.
 React + Vite | State: Context/Zustand | CSS: Tailwind (optional)
 
 ## Run
-npm install
-npm run dev
+Make sure you're in the correct directory, (may need to **"cd .\wheel-of-fortune\"**)
+
+To install the necessary packages (need npm installed):
+**npm install**
+
+To run a dev version of the app in your browser:
+**npm run dev**
 
 ## Scripts
 - dev: local dev server
