@@ -23,6 +23,8 @@
   padding: 12px;
   border-radius: 12px;
   background: radial-gradient(ellipse at top, #0a3d6d 0%, #04223c 60%, #03182b 100%);
+  flex-direction: column; /* ⬅️ Stack PuzzleBoard and guessed letters vertically */
+  padding: 20px 40px;       /* clips any small overflow */
 }
 
 .dashboard__sidebar {
@@ -112,4 +114,62 @@
 .modal-buttons {
   display: flex;
   justify-content: space-around;
+}
+
+/* Guessed letters styling */
+
+.guessed-letters-container {
+  margin-top: 20px;
+  text-align: left;          /* aligns everything left */
+  width: 90%;
+  max-width: 800px;
+}
+
+.guessed-letters-container h3 {
+  margin-bottom: 10px;
+  color: #9fc7ff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.guessed-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.guessed-group h4 {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+  color: #8ab6ff;
+}
+
+.guessed-letters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.guessed-letter {
+  background-color: #1b66c8;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.guessed-letter.vowel {
+  background-color: #ff6b81; /* distinguish vowels visually */
+}
+
+.letter-button[disabled],
+.letter-button.disabled-letter {
+    /* Style for buttons that are disabled */
+    opacity: 0.75; /* Makes them slightly transparent */
+    cursor: not-allowed; /* Shows a 'no entry' cursor */
+    /* You can also change the background/text color if you like */
+    /* background-color: #ccc !important;
+    color: #888 !important; */
 }
