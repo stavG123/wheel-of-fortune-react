@@ -151,7 +151,48 @@ function Dashboard() {
             letters={letters}
             guessedLetters={guessed}
           />
+
+          <div className="guessed-letters-container">
+            <h2>Guessed Letters:</h2>
+
+            <div className="guessed-groups">
+              <div className="guessed-group">
+                <h4>Consonants</h4>
+                <div className="guessed-letters">
+                  {([...guessed].filter(l => !"AEIOU".includes(l)).length > 0)
+                    ? [...guessed]
+                        .filter(l => !"AEIOU".includes(l))
+                        .sort()
+                        .map(letter => (
+                          <span key={letter} className="guessed-letter">
+                            {letter}
+                          </span>
+                        ))
+                    : <em>No consonants guessed yet.</em>}
+                </div>
+            </div>
+
+            <div className="guessed-group">
+              <h4>Vowels</h4>
+                <div className="guessed-letters">
+                  {([...guessed].filter(l => "AEIOU".includes(l)).length > 0)
+                    ? [...guessed]
+                        .filter(l => "AEIOU".includes(l))
+                        .sort()
+                        .map(letter => (
+                          <span key={letter} className="guessed-letter vowel">
+                            {letter}
+                          </span>
+                        ))
+                    : <em>No vowels guessed yet.</em>}
+                </div>
+              </div>
+            </div>
+          </div>
+
         </section>
+
+
 
         <aside className="dashboard__sidebar">
           <div className="panel">
@@ -206,7 +247,7 @@ function Dashboard() {
             </div>
           )}
 
-          {isConstantOpen && (
+          {/* {isConstantOpen && (
             <div className="modal-overlay">
               <div className="modal">
                 <h2>Choose a Consonant</h2>
@@ -253,6 +294,95 @@ function Dashboard() {
                     <button type="button" className="letter-button btn btn-lg btn-info" name="letter" onClick={() => handleLetterClick('I')}>I</button>
                     <button type="button" className="letter-button btn btn-lg btn-info" name="letter" onClick={() => handleLetterClick('O')}>O</button>
                     <button type="button" className="letter-button btn btn-lg btn-info" name="letter" onClick={() => handleLetterClick('U')}>U</button>
+                  </div>
+                </div>
+
+                <div className="mt-3">
+                  <button className="btn btn-secondary" onClick={closeVowelPopup}>
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </aside>
+      </main>
+    </div>
+  )
+}
+
+export default Dashboard */}
+
+          {isConstantOpen && (
+            <div className="modal-overlay">
+              <div className="modal">
+                <h2>Choose a Consonant</h2>
+
+                <div className="col-lg-4 center-block text-center" id="button-container">
+                  {[
+                    ['B', 'C', 'D', 'F', 'G', 'H', 'J'],
+                    ['K', 'L', 'M', 'N', 'P', 'Q', 'R'],
+                    ['S', 'T', 'V', 'W', 'X', 'Y', 'Z']
+                  ].map((row, rowIdx) => (
+                    <div className="btn-group" role="group" key={rowIdx} id={`key-row${rowIdx + 1}`}>
+                      {row.map(letter => {
+                          const isGuessed = guessed.has(letter) // Check if letter is already in the 'guessed' Set
+                          return (
+                        <button
+                          key={letter}
+                          type="button"
+                          className={`letter-button btn btn-lg btn-warning ${isGuessed ? 'disabled-letter' : ''}`}
+                          onClick={() => {
+                                if (!isGuessed) {
+                                    handleLetterClick(letter)
+                                    closeConstantPopup() // Close modal on successful guess attempt
+                                }
+                            }}
+                            disabled={isGuessed} // Disable button if already guessed
+                        >
+                          {letter}
+                        </button>
+                      )})}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="modal-buttons" style={{ marginTop: '20px' }}>
+                  <button className="button button--secondary" onClick={closeConstantPopup}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {isVowelOpen && (
+            <div className="modal-overlay">
+              <div className="modal text-center">
+                <h2>Buy a Vowel</h2>
+
+                <div className="col-lg-4 center-block text-center" id="vowel-container">
+                  <div className="btn-group" role="group" id="vowel-row">
+                      {['A', 'E', 'I', 'O', 'U'].map(letter => {
+                          const isGuessed = guessed.has(letter) // Check if letter is already in the 'guessed' Set
+                          return (
+                            <button
+                              key={letter}
+                              type="button"
+                              className={`letter-button btn btn-lg btn-info ${isGuessed ? 'disabled-letter' : ''}`}
+                              name="letter"
+                              onClick={() => {
+                                  if (!isGuessed) {
+                                      handleLetterClick(letter)
+                                      closeVowelPopup() // Close modal on successful guess attempt
+                                  }
+                              }}
+                              disabled={isGuessed} // Disable button if already guessed
+                            >
+                              {letter}
+                            </button>
+                          )
+                      })}
                   </div>
                 </div>
 
