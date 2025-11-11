@@ -3,6 +3,9 @@ import PuzzleBoard from './PuzzleBoard.jsx'
 import './dashboard.css'
 import { getRandomClue } from '../../data/clues.js'
 import WheelOfFortune from './Wheel.jsx'
+import AdSquare from '../Ads/AdSquare.jsx'
+import xAd from '../../assets/x.png'
+import yAd from '../../assets/y.png'
 
 function Dashboard() {
   // state
@@ -224,6 +227,17 @@ function Dashboard() {
           <div className="panel">
             <h2>Wheel</h2>
             <WheelOfFortune />
+          </div>
+
+          <div className="panel">
+            <h2>Sponsored</h2>
+            {/* Example usage: images placed in public/ads/ (e.g. public/ads/ad1.jpg) */}
+            <AdSquare
+              images={[
+                xAd,
+                yAd
+              ]}
+            />
           </div>
 
           {isSolveOpen && (
