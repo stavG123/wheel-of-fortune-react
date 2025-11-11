@@ -6,6 +6,7 @@ import WheelOfFortune from './Wheel.jsx'
 import AdSquare from '../Ads/AdSquare.jsx'
 import xAd from '../../assets/x.png'
 import yAd from '../../assets/y.png'
+import kAd from '../../assets/k.png'
 
 function Dashboard() {
   // state
@@ -235,7 +236,8 @@ function Dashboard() {
             <AdSquare
               images={[
                 xAd,
-                yAd
+                yAd,
+                kAd
               ]}
             />
           </div>
