@@ -27,7 +27,7 @@ const WHEEL_VALUES = [
   750
 ];
 
-export default function WheelOfFortune() {
+export default function WheelOfFortune({ onResult, canSpin }) {
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [result, setResult] = useState(null);
@@ -123,18 +123,25 @@ export default function WheelOfFortune() {
   }, [maxSpeed, upTime, downTime, segments.length, timerDelay]);
 
   const finishSpin = useCallback(() => {
-    const anim = animationRef.current;
+  const anim = animationRef.current;
 
-    // Calculate final result
-    const normalizedRotation = anim.angleCurrent % 360;
-    const segmentAngle = 360 / segments.length;
-    const segmentIndex =
-      Math.floor((360 - normalizedRotation + segmentAngle / 2) / segmentAngle) %
-      segments.length;
+  // Calculate final result
+  const normalizedRotation = anim.angleCurrent % 360;
+  const segmentAngle = 360 / segments.length;
+  const segmentIndex =
+    Math.floor((360 - normalizedRotation + segmentAngle / 2) / segmentAngle) %
+    segments.length;
 
-    setResult(segments[segmentIndex]);
-    setIsSpinning(false);
-  }, [segments]);
+  const finalResult = segments[segmentIndex];
+  setResult(finalResult);
+  setIsSpinning(false);
+
+  // Send result up to parent (Dashboard)
+  if (onResult) {
+    onResult(finalResult);
+  }
+}, [segments, onResult]);
+
 
   const segmentAngle = 360 / WHEEL_VALUES.length;
 
@@ -282,16 +289,16 @@ export default function WheelOfFortune() {
 
       <button
         onClick={spinWheel}
-        disabled={isSpinning}
+        disabled={isSpinning || !canSpin}
         className="mt-8 px-8 py-4 bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-500 
         disabled:cursor-not-allowed text-black font-bold text-xl rounded-full shadow-lg 
-        transform hover:scale-105 transition-all duration-200" 
+        transform hover:scale-105 transition-all duration-200 disabled__button"
         style={{marginBottom: '0px'}}
       >
         {isSpinning ? "Spinning..." : "Spin the Wheel!" }
       </button>
 
-        {result !== null && (
+        {/* {result !== null && (
   <div className="mt-1 p-6 bg-white rounded-lg shadow-xl">
      <p className="font-bold text-gray-800" style={{fontSize: '20px', margin: '0px',color: '#FFFFFF'}}>
       Result:
@@ -310,7 +317,7 @@ export default function WheelOfFortune() {
       </span>
     </div>
   </div>
-)}
+)} */}
     </div>
   );
 }
