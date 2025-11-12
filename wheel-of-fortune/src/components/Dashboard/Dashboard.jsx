@@ -124,8 +124,10 @@ function Dashboard() {
   const nextName = players.find(p => p.id === nextId)?.name;
 
   if (value === "Bankrupt") {
-    setStatus(`BANKRUPT! You lose all your money! Player ${nextName}'s turn to spin.`);
+    nextPlayer()
+    setStatus(`BANKRUPT! You lose all your money! ${nextName}'s turn to spin.`);
   } else if (value === "Lose a Turn") {
+    nextPlayer()
     setStatus(`Lose a Turn! Player ${nextName}'s turn to spin.`);
   } else {
     setStatus(`You spun $${value}! Guess a consonant. For each occurrence of your guess you'll win $${value}.`);
@@ -208,7 +210,7 @@ function Dashboard() {
     } else {
       const nextId = (currentPlayer % players.length) + 1;
       const nextName = players.find(p => p.id === nextId)?.name;
-      setStatus(`No “${L}” in the puzzle, ${nextName}'s turn to spin the wheel, buy a vowel, or solve!`)
+      setStatus(`No “${L}” in the puzzle. ${nextName}'s turn to spin the wheel, buy a vowel, or solve!`)
       nextPlayer()
     }
   }
