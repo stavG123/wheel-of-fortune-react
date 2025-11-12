@@ -50,6 +50,15 @@ function Dashboard() {
     setGuessed(new Set())
     setRevealed(chars.map(ch => (/[A-Z]/.test(ch) ? false : true))) //use for revealing letters later, array of true/false
     setStatus('New round! Spin the wheel to find prize value.')
+
+    setCurrentPlayer(1);       // Player 1 always starts
+    setSpinResult(null);       // Clear previous wheel value
+    setCanSpin(true);          // Enable spinning again
+    setIsConstantOpen(false);  // Close consonant popup
+    setIsVowelOpen(false);     // Close vowel popup
+    setIsSolveOpen(false);     // Close solve modal
+    setGuess('');              // Clear any previous guess input
+
   }, [clue])
 
   const openSolvePopup = () => setIsSolveOpen(true)
@@ -243,7 +252,7 @@ function Dashboard() {
 
           <div className="dashboard__header">
 
-            <div style={{ textAlign: 'center', color: '#77bdfa', marginTop: '-15rem' }}>
+            <div style={{ textAlign: 'center', color: '#77bdfa', marginTop: '-16rem' }}>
               <h2 style={{ margin: '0 0 4px 0' }}>Category: {clue.category}</h2>
             </div>
 

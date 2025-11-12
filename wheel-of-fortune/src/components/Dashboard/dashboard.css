@@ -207,8 +207,8 @@
 }
 
 .active-player {
-  border: 3px solid #1b66c8;
-  background: #e9f1ff;
+  border: 4px solid #1b66c8;
+  background: #f8ffe9;
   transform: scale(1.05);
 }
 
