@@ -126,22 +126,19 @@ function Dashboard() {
     
 
   const handleSpinResult = (value) => {
-  setSpinResult(value);
-  setCanSpin(false); // disable spinning until a consonant is guessed
+    setSpinResult(value);
+    setCanSpin(false); // disable spinning until a consonant is guessed
 
-  const nextId = (currentPlayer % players.length) + 1;
-  const nextName = players.find(p => p.id === nextId)?.name;
-
-  if (value === "Bankrupt") {
-    nextPlayer()
-    setStatus(`BANKRUPT! You lose all your money! ${nextName}'s turn to spin.`);
-  } else if (value === "Lose a Turn") {
-    nextPlayer()
-    setStatus(`Lose a Turn! Player ${nextName}'s turn to spin.`);
-  } else {
-    setStatus(`You spun $${value}! Guess a consonant. For each occurrence of your guess you'll win $${value}.`);
-  }
-};
+    if (value === "Bankrupt") {
+      nextPlayer()
+      setStatus(`BANKRUPT! You lose all your money! Next player up!`);
+    } else if (value === "Lose a Turn") {
+      nextPlayer()
+      setStatus(`Lose a Turn! Next Player Up!`);
+    } else {
+      setStatus(`You spun $${value}! Guess a consonant. For each occurrence of your guess you'll win $${value}.`);
+    }
+  };
 
 
   // guess handler 
@@ -172,6 +169,8 @@ function Dashboard() {
 
     if (hits > 0) {
       setStatus(`That is Correct! ${L} appears ${hits} time(s). \nSpin again, buy a vowel, or solve!`)
+      setSpinResult(null);
+      setCanSpin(true);
 
       // Reveal the matching tiles in the revealed[] array
       setRevealed(prev =>
