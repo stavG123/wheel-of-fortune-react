@@ -27,6 +27,9 @@ function Dashboard() {
   ])
   const [currentPlayer, setCurrentPlayer] = useState(1)
   const [canSpin, setCanSpin] = useState(true)
+  const MAX_ROUNDS = 3;
+  const [winner, setWinner] = useState(null);
+  const [isWinnerOpen, setIsWinnerOpen] = useState(false); //for the modal
 
 
   const nextPlayer = useCallback(() => {
@@ -36,30 +39,26 @@ function Dashboard() {
   }, [])
   const [spinResult, setSpinResult] = useState(null);
 
-
-
-
-
-  // start a new round
+    // start a new round
   const startNewRound = useCallback(() => {
-    const next = getRandomClue()
-    const chars = next.phrase.toUpperCase().split('')
-    setRound(r => r + (clue ? 1 : 0))
-    setClue(next)
-    setLetters(chars)
-    setGuessed(new Set())
-    setRevealed(chars.map(ch => (/[A-Z]/.test(ch) ? false : true))) //use for revealing letters later, array of true/false
-    setStatus('New round! Spin the wheel to find prize value.')
+    setRound(prevRound => {
+      if (prevRound >= MAX_ROUNDS) {
+        const topPlayer = players.reduce(
+          (max, p) => (p.balance > max.balance ? p : max),
+          players[0]
+        );
 
-    setCurrentPlayer(1);       // Player 1 always starts
-    setSpinResult(null);       // Clear previous wheel value
-    setCanSpin(true);          // Enable spinning again
-    setIsConstantOpen(false);  // Close consonant popup
-    setIsVowelOpen(false);     // Close vowel popup
-    setIsSolveOpen(false);     // Close solve modal
-    setGuess('');              // Clear any previous guess input
+        setWinner(topPlayer);
+        setIsWinnerOpen(true);
+        setStatus(`GAME OVER! Winner: ${topPlayer.name} with $${topPlayer.balance}!`);
+        return prevRound; // do NOT increment
+      }
 
-  }, [clue])
+      return prevRound + 1; // increment normally
+    });
+  }, [players]);
+
+
 
   const openSolvePopup = () => setIsSolveOpen(true)
   const closeSolvePopup = () => {
@@ -92,11 +91,29 @@ function Dashboard() {
     //next round
   }
 
-  // initial load
+  // initial load & whenever the round changes
   useEffect(() => {
-    startNewRound()
+    if (round > MAX_ROUNDS) return; // don't generate after game over
 
-  }, [])
+    const next = getRandomClue();
+    const chars = next.phrase.toUpperCase().split("");
+
+    setClue(next);
+    setLetters(chars);
+    setGuessed(new Set());
+    setRevealed(chars.map(ch => (/[A-Z]/.test(ch) ? false : true)));
+
+    setStatus(`Round ${round}! Spin the wheel!`);
+
+    setCurrentPlayer(1);
+    setSpinResult(null);
+    setCanSpin(true);
+    setIsConstantOpen(false);
+    setIsVowelOpen(false);
+    setIsSolveOpen(false);
+    setGuess("");
+  }, [round]);
+
 
   const handleAcknowledge = () => {
       // Handle “Lose a Turn”
@@ -463,6 +480,28 @@ function Dashboard() {
 
                 <div className="mt-3">
                   <button className="btn btn-secondary" onClick={closeVowelPopup}>
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {isWinnerOpen && winner && (
+            <div className="modal-overlay">
+              <div className="modal">
+                <h2>🏆 Game Over! 🏆</h2>
+                <p style={{ fontSize: "1.3rem", color: "#e2e8f0" }}>
+                  <strong>{winner.name}</strong> wins with <strong>${winner.balance}</strong>!
+                </p>
+
+                <div className="modal-buttons">
+                  <button
+                    className="button"
+                    onClick={() => {
+                      setIsWinnerOpen(false);
+                    }}
+                  >
                     Close
                   </button>
                 </div>
