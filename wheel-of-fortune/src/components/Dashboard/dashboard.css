@@ -192,6 +192,7 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   width: 120px;
   transition: all 0.3s ease;
+  color:rgb(46, 44, 44)
 }
 
 .player-box h3 {
